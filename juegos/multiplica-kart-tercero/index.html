@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#122c65"><title>Multiplica Kart | Tercer grado | Chipipata</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17305a;background:linear-gradient(165deg,#9de9ff 0%,#d9f8ff 38%,#f5fff2 100%);min-height:100vh}
+header{background:#122d69;color:white;padding:12px max(12px,calc((100vw - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+header strong{font-size:15px}header small{display:block;color:#ccecff}.wrap{max-width:1100px;margin:auto;padding:14px}
+button{font:inherit;cursor:pointer;border:0;border-radius:13px;font-weight:900;padding:11px 17px;touch-action:manipulation}
+.btn{background:#ffce36;color:#503600;box-shadow:0 4px 0 #cc9412}.btn:active,.control:active{transform:translateY(2px)}.secondary{background:#e8f1ff;color:#19417a}
+.panel{background:#fff;border-radius:23px;padding:22px;margin:14px 0;box-shadow:0 8px 0 #c7d8e7}
+.hero{text-align:center;background:linear-gradient(140deg,#143c95,#1685cc);color:#fff;overflow:hidden}
+.hero h1{font-size:clamp(34px,6vw,65px);line-height:1.05;margin:10px 0}.hero p{font-size:18px}.hero .kart{font-size:70px}
+h2{margin:4px 0 15px}.worlds{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px}
+.world{border:3px solid #dbe7f6;border-radius:19px;padding:16px;text-align:center;background:#f6fbff}.world .emoji{font-size:46px}.world b{display:block}.world p{font-size:13px;color:#476282;min-height:38px}
+.world.lock{opacity:.55}.world .btn{width:100%}
+input{font:inherit;padding:13px;border:3px solid #d3e6f5;border-radius:13px;max-width:90%}
+.hud{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-weight:900;font-size:15px}
+.track{height:17px;background:#dce9f5;border-radius:15px;overflow:hidden;margin:12px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,#45d5a1,#ffd442);transition:width .25s}
+canvas{display:block;width:100%;height:auto;border-radius:19px;border:4px solid #fff;background:#89dfff;touch-action:none}
+.controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}.control{min-width:84px;height:62px;background:#183f8a;color:white;font-size:26px;box-shadow:0 4px 0 #0c2759}
+.hint{font-size:13px;color:#536783}.hidden{display:none!important}
+.overlay{position:fixed;inset:0;background:#06132cbd;z-index:20;display:flex;justify-content:center;align-items:center;padding:16px}
+.dialog{width:min(100%,580px);max-height:96vh;overflow:auto;background:#fff;border:5px solid #ffda56;border-radius:25px;padding:22px;text-align:center;box-shadow:0 12px 0 #132c62}
+.dialog h2{font-size:clamp(22px,4vw,33px);margin:8px}.problem{font-size:clamp(30px,6vw,46px);font-weight:1000;color:#153e89;margin:16px 0}
+.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.answer{background:#edf5ff;border:3px solid #a5c5ed;color:#123e81;font-size:24px}.answer.correct{background:#b9f5ce;border-color:#168d4b}.answer.wrong{background:#ffd2c8;border-color:#b43d2a}
+.feedback{font-weight:800;min-height:36px;margin:15px 0}.trophy{text-align:center;background:linear-gradient(140deg,#19468e,#1399a8);color:#fff}.trophy h1{font-size:clamp(26px,5vw,46px)}
+.diploma{background:#fff;color:#193869;border:8px double #d6a82c;padding:25px;border-radius:14px;margin:18px auto;max-width:700px}
+footer{text-align:center;padding:22px;color:#2c5780;font-weight:800}
+@media(max-width:500px){.wrap{padding:9px}.panel{padding:14px}.control{min-width:72px;height:58px}.dialog{padding:14px}.answers{gap:8px}.answer{font-size:20px}}
+@media print{header,footer,.btn,.controls,.hud,.track,canvas,.hint{display:none!important}body{background:white}.panel{box-shadow:none}.diploma{margin:0 auto}}
+</style></head><body>
+<header><div><strong>🏫 I.E. N.º 34120 «ALMIRANTE MIGUEL GRAU»</strong><small>MUNDO EDUCATIVO DIGITAL · CHIPIPATA · TERCER GRADO</small></div><button class="secondary" onclick="location.href='../../index.html'">⌂ Volver al portal</button></header>
+<main class="wrap">
+<section id="welcome" class="panel hero"><div class="kart">🏎️💨🏁</div><h1>MULTIPLICA KART</h1><h2>LA GRAN COPA CHIPIPATA</h2><p>¡Acelera, esquiva obstáculos y gana carreras resolviendo multiplicaciones de las tablas del 1 al 12!</p><p><strong>5 mundos · 69 ejercicios · 5 trofeos</strong></p><label for="student">Nombre del piloto:</label><p><input id="student" placeholder="Escribe tu nombre" maxlength="28" autocomplete="off"></p><button class="btn" id="start">🏁 ¡A CORRER!</button><p class="hint" style="color:#d6f3ff">El progreso se guarda en este dispositivo. Juego original inspirado en las carreras de karts.</p></section>
+<section id="worldMap" class="panel hidden"><h2>🗺️ Selecciona tu circuito</h2><div class="worlds" id="worldCards"></div><p class="hint">Gana cada copa para desbloquear la siguiente pista. Las preguntas de cada mundo son distintas.</p></section>
+<section id="race" class="panel hidden"><div class="hud"><span id="worldLabel">Circuito</span><span>🏆 <span id="cupCount">0</span>/5</span><span>⭐ <span id="points">0</span></span><span>🪙 <span id="money">0</span></span><span id="questionCount">0/10</span></div><div class="track"><div id="bar" class="bar"></div></div>
+<canvas id="screen" width="1000" height="560" aria-label="Carrera de karts con carretera, curvas y obstáculos"></canvas>
+<div class="controls"><button id="left" class="control" aria-label="Girar a la izquierda">◀</button><div style="text-align:center"><b>🏎️ ¡CONDUCE!</b><div class="hint">← → o A D · móvil: botones</div></div><button id="right" class="control" aria-label="Girar a la derecha">▶</button></div>
+<p class="hint">La carrera avanza automáticamente. Resuelve cada reto para recibir turbo. Si fallas, podrás aprender la respuesta correcta y continuar.</p></section>
+<section id="results" class="panel trophy hidden"><div style="font-size:75px">🏆🎊🏎️</div><h1 id="resultTitle"></h1><p id="resultMessage"></p><p><strong id="resultStats"></strong></p><button class="btn" id="nextWorld">🏁 Siguiente circuito</button> <button class="secondary" id="mapBtn">🗺️ Ver mapa</button>
+<div id="diploma" class="diploma hidden"><h2>🏅 DIPLOMA DEL GRAN CAMPEÓN</h2><p>La I.E. N.º 34120 «Almirante Miguel Grau» de Chipipata reconoce a:</p><h2 id="diplomaStudent"></h2><p>Por completar los cinco circuitos y los <strong>69 retos de multiplicación</strong> de MULTIPLICA KART – TERCER GRADO.</p><h3>¡Felicitaciones por tu dedicación y esfuerzo!</h3><p>🏆 GRAN COPA CHIPIPATA 🏆</p><button class="btn" onclick="window.print()">🖨️ Imprimir diploma</button></div></section>
+</main>
+<div id="quiz" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="quizTitle"><div class="dialog"><div style="font-size:40px">🏁❓🏎️</div><h2 id="quizTitle">¡RETO DE MULTIPLICACIÓN!</h2><p id="quizSub"></p><div class="problem" id="problem"></div><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><button class="btn hidden" id="continue">🚀 Continuar carrera</button></div></div>
+<footer>🌟 APRENDER ES UNA AVENTURA · MUNDO EDUCATIVO DIGITAL – CHIPIPATA</footer>
+<script>
+'use strict';
+const $=s=>document.getElementById(s);
+const worlds=[
+ {name:'Selva Turbo',icon:'🌴',count:10,digits:1,desc:'1 cifra × tablas del 1 al 12',sky:'#73dfff',ground:'#58bf56',road:'#696b76',boss:'Jaguar Relámpago'},
+ {name:'Costa Veloz',icon:'🏖️',count:10,digits:2,desc:'2 cifras × tablas del 1 al 12',sky:'#7adcf4',ground:'#e9d18b',road:'#777786',boss:'Tortuga Tornado'},
+ {name:'Volcán de Fuego',icon:'🌋',count:14,digits:3,desc:'3 cifras × tablas del 1 al 12',sky:'#ffa16e',ground:'#9a5443',road:'#605d69',boss:'Dragón de Lava'},
+ {name:'Montaña Extrema',icon:'🏔️',count:15,digits:4,desc:'4 cifras × tablas del 1 al 12',sky:'#a7d8ff',ground:'#b7d8dd',road:'#657481',boss:'Águila de Hielo'},
+ {name:'Gran Copa Chipipata',icon:'🏰',count:20,digits:0,desc:'1, 2, 3 y 4 cifras combinadas',sky:'#a99cf8',ground:'#6d9b79',road:'#6c667f',boss:'Rey de los Karts'}
+];
+const KEY='multiplica_kart_chipipata_tercero_v1';
+let state={name:'Piloto',unlocked:0,cups:0,points:0,coins:0,best:{}};
+try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&typeof x==='object')state={...state,...x}}catch(e){}
+let world=0,index=0,questions=[],correct=0,wrong=0,running=false,asking=false,answered=false,dist=0,lane=0,velocity=1,obstacles=[],sparks=[],last=0,steer=0,raf=0;
+const cvs=$('screen'),ctx=cvs.getContext('2d');
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function view(id){['welcome','worldMap','race','results'].forEach(x=>$(x).classList.toggle('hidden',x!==id))}
+function rnd(seed){let s=seed>>>0;return()=>{s=(1664525*s+1013904223)>>>0;return s/4294967296}}
+function buildQuestions(w){const r=rnd(9831+w*793),used=new Set(),arr=[];for(let i=0;i<worlds[w].count;i++){let digits=worlds[w].digits||1+(i%4),lo=digits===1?1:10**(digits-1),hi=digits===1?9:10**digits-1;let a,b,key,tries=0;do{a=lo+Math.floor(r()*(hi-lo+1));b=1+((i*7+w*3+Math.floor(i/12))%12);key=a+'x'+b;tries++}while(used.has(key)&&tries<100);used.add(key);arr.push({a,b,answer:a*b})}return arr}
+function map(){let html='';worlds.forEach((w,i)=>{let lock=i>state.unlocked;html+=`<div class="world ${lock?'lock':''}"><div class="emoji">${w.icon}</div><b>Mundo ${i+1}</b><h3>${w.name}</h3><p>${w.count} retos · ${w.desc}</p>${lock?'<strong>🔒 Bloqueado</strong>':`<button class="btn" data-world="${i}">${i<state.unlocked?'🔁 Repetir':'🏎️ Correr'}</button>`}</div>`});$('worldCards').innerHTML=html;document.querySelectorAll('[data-world]').forEach(b=>b.onclick=()=>startRace(+b.dataset.world));view('worldMap')}
+function startRace(w){world=w;questions=buildQuestions(w);index=0;correct=0;wrong=0;dist=0;lane=0;velocity=1;obstacles=[];sparks=[];asking=false;answered=false;running=true;last=0;updateHud();view('race');cancelAnimationFrame(raf);raf=requestAnimationFrame(frame)}
+function updateHud(){$('worldLabel').textContent=worlds[world].icon+' '+worlds[world].name;$('cupCount').textContent=state.cups;$('points').textContent=state.points;$('money').textContent=state.coins;$('questionCount').textContent=index+'/'+questions.length;$('bar').style.width=100*index/questions.length+'%'}
+function quiz(){if(asking||index>=questions.length)return;asking=true;answered=false;let q=questions[index];$('quizTitle').textContent='🏁 RETO '+(index+1)+' DE '+questions.length;$('quizSub').textContent='Resuelve para activar tu turbo';$('problem').textContent=q.a+' × '+q.b+' = ?';$('feedback').textContent='';$('continue').classList.add('hidden');let vals=new Set([q.answer]),r=rnd(2129+world*1000+index*19);while(vals.size<4){let offset=1+Math.floor(r()*Math.max(10,Math.min(900,q.answer*.2)));let value=q.answer+(r()>.5?offset:-offset);if(value>0)vals.add(value)}let options=[...vals].sort(()=>r()-.5);$('answers').innerHTML='';options.forEach(n=>{let b=document.createElement('button');b.className='answer';b.textContent=n.toLocaleString('es-PE');b.onclick=()=>answer(n,b);$('answers').appendChild(b)});$('quiz').classList.remove('hidden')}
+function answer(n,b){if(answered)return;answered=true;let q=questions[index],ok=n===q.answer;document.querySelectorAll('.answer').forEach(x=>{x.disabled=true;if(x.textContent===q.answer.toLocaleString('es-PE'))x.classList.add('correct')});if(ok){correct++;state.points+=100;state.coins+=5;velocity=1.12;$('feedback').textContent='✅ ¡Excelente! +100 puntos y un pequeño turbo 🚀';$('feedback').style.color='#11834c'}else{wrong++;b.classList.add('wrong');velocity=.65;$('feedback').textContent='💡 La respuesta es '+q.answer.toLocaleString('es-PE')+'. ¡Sigue practicando!';$('feedback').style.color='#b84b27'}save();updateHud();$('continue').classList.remove('hidden')}
+function continueRace(){$('quiz').classList.add('hidden');index++;asking=false;updateHud();if(index>=questions.length){finish()}else{dist=0}}
+function finish(){running=false;state.unlocked=Math.max(state.unlocked,Math.min(4,world+1));state.cups=Math.max(state.cups,world+1);state.best[world]=Math.max(state.best[world]||0,correct);save();$('resultTitle').textContent=world===4?'¡GRAN CAMPEÓN DE CHIPIPATA!':'¡COPA GANADA!';$('resultMessage').textContent=state.name+', superaste '+worlds[world].name+' y venciste a '+worlds[world].boss+'.';$('resultStats').textContent=correct+' aciertos · '+wrong+' respuestas para practicar · '+state.points+' puntos acumulados';$('nextWorld').classList.toggle('hidden',world===4);$('diploma').classList.toggle('hidden',world!==4);$('diplomaStudent').textContent=state.name;view('results')}
+function draw(t){let w=worlds[world],W=cvs.width,H=cvs.height,curve=Math.sin(t*.00025+world)*50;ctx.fillStyle=w.sky;ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff8';for(let i=0;i<7;i++){let x=(i*210-t*.005)%1250;ctx.beginPath();ctx.ellipse(x,85+(i%3)*30,60,22,0,0,Math.PI*2);ctx.fill()}
+ctx.fillStyle=w.ground;ctx.fillRect(0,235,W,H-235);
+ctx.font='90px serif';for(let i=0;i<7;i++){let x=((i*235-t*.03)%1400+1400)%1400-150;ctx.fillText(['🌲','🌴','⛰️','🌋','🏰'][world],x,290+(i%2)*35)}
+ctx.fillStyle=w.road;ctx.beginPath();ctx.moveTo(W*.47+curve,238);ctx.lineTo(W*.53+curve,238);ctx.lineTo(W*.94,H);ctx.lineTo(W*.06,H);ctx.closePath();ctx.fill();
+ctx.strokeStyle='#f6edbe';ctx.lineWidth=9;ctx.setLineDash([28,28]);let phase=(dist*10)%56;ctx.lineDashOffset=-phase;for(let i=1;i<3;i++){ctx.beginPath();ctx.moveTo(W*.47+curve+(W*.06*i/3),238);ctx.lineTo(W*.06+(W*.88*i/3),H);ctx.stroke()}ctx.setLineDash([]);
+for(let i=0;i<5;i++){let z=((dist*.009+i*.23)%1),y=240+z*z*315,x=500+Math.sin(i*5+world)*z*350+curve*(1-z),s=14+z*45;ctx.font=s+'px serif';ctx.fillText(i%2?'🪙':'🚧',x,y)}
+let carX=W/2+lane*210;ctx.save();ctx.translate(carX,435);ctx.rotate(-steer*.055);ctx.fillStyle='#142c64';ctx.fillRect(-68,32,30,70);ctx.fillRect(38,32,30,70);ctx.fillStyle='#f23f48';ctx.beginPath();ctx.roundRect(-57,0,114,135,24);ctx.fill();ctx.fillStyle='#ffda43';ctx.fillRect(-39,82,78,24);ctx.fillStyle='#a7f4ff';ctx.beginPath();ctx.roundRect(-35,12,70,42,10);ctx.fill();ctx.font='46px serif';ctx.fillText('🧑‍🚀',-27,52);ctx.restore();
+ctx.fillStyle='#17325f';ctx.font='bold 25px system-ui';ctx.fillText('🏎️ '+w.name,25,42);ctx.fillText('🏁 '+(index+1)+' / '+questions.length,W-180,42);
+ctx.fillStyle='#ffdb42';ctx.font='bold 27px system-ui';ctx.fillText(velocity>1.07?'🚀 TURBO!':'',W/2-55,62)}
+function frame(t){if(!running)return;let dt=Math.min((t-last||16)/16.67,2);last=t;if(!asking){lane=Math.max(-1,Math.min(1,lane+steer*.027*dt));dist+=velocity*.48*dt;velocity+=(1-velocity)*.003*dt;if(dist>210){quiz()}}draw(t);raf=requestAnimationFrame(frame)}
+function bind(id,d){let e=$(id);e.addEventListener('pointerdown',ev=>{ev.preventDefault();steer=d;e.setPointerCapture(ev.pointerId)});['pointerup','pointercancel','lostpointercapture'].forEach(x=>e.addEventListener(x,()=>steer=0))}
+bind('left',-1);bind('right',1);
+document.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','a','d','A','D'].includes(e.key)){e.preventDefault();steer=['ArrowLeft','a','A'].includes(e.key)?-1:1}});
+document.addEventListener('keyup',e=>{if(['ArrowLeft','ArrowRight','a','d','A','D'].includes(e.key))steer=0});
+$('start').onclick=()=>{state.name=$('student').value.trim()||state.name;save();map()};
+$('continue').onclick=continueRace;$('mapBtn').onclick=map;$('nextWorld').onclick=()=>startRace(Math.min(4,world+1));
+$('student').value=state.name==='Piloto'?'':state.name;
+</script></body></html>

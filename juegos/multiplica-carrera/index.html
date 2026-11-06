@@ -1,0 +1,183 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Multiplica Carrera · Chipipata</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial,sans-serif;background:linear-gradient(#bceeff,#f7f6dc);color:#183453}
+header{background:#084b96;color:white;text-align:center;padding:14px;border-bottom:7px solid #ffd443}h1{margin:2px;font-size:clamp(24px,5vw,38px)}header p{margin:4px}
+main{max-width:1020px;margin:15px auto;padding:0 12px 30px}.panel{background:white;border-radius:20px;padding:20px;box-shadow:0 7px 20px #144b8426;margin:15px 0}
+h2{margin-top:0}.characters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.character{border:3px solid #d1e2f3;border-radius:16px;background:#f0f8ff;padding:14px 4px;font-weight:800;cursor:pointer;font-size:16px}
+.character .face{display:block;font-size:46px}.character.chosen{border-color:#e93b45;background:#ffefae}
+button{touch-action:manipulation}button:focus-visible{outline:4px solid #f6b900;outline-offset:3px}
+.primary{background:#e73542;color:white;border:0;border-radius:14px;padding:13px 25px;font-size:18px;font-weight:900;cursor:pointer}
+.primary:disabled{opacity:.45;cursor:not-allowed}.muted{color:#52677e}
+.track{background:linear-gradient(#9ce4fa 0 22%,#8fce79 22% 100%);border:5px solid #1670a8;border-radius:18px;padding:10px;position:relative;overflow:hidden}
+.lane{position:relative;height:84px;background:repeating-linear-gradient(90deg,#c6a37c 0 30px,#c9a983 30px 60px);border-bottom:4px dashed #fff;overflow:hidden}
+.lane:last-child{border-bottom:0}.runner{position:absolute;left:0;top:11px;transition:left .7s ease;display:flex;align-items:center;gap:3px;white-space:nowrap}
+.avatar{font-size:43px;filter:drop-shadow(2px 4px 1px #3336)}.runner small{font-size:11px;font-weight:900;background:#ffffffd9;border-radius:8px;padding:3px}
+.finish{position:absolute;right:10px;top:0;bottom:0;width:12px;background:repeating-linear-gradient(#fff 0 12px,#222 12px 24px);opacity:.9}
+.status{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-weight:850;margin:12px 0}
+.question{text-align:center;background:#fff8d4;border:3px solid #ffce39;border-radius:18px;padding:15px}
+.equation{font-size:clamp(32px,7vw,52px);font-weight:1000;color:#084b96;margin:8px}
+.answers{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.answer{padding:18px 6px;border:3px solid #0a67ad;border-radius:14px;background:#e4f4ff;font-size:25px;font-weight:900;cursor:pointer;color:#063d79}
+.answer:hover{background:#cbeaff}.answer:disabled{opacity:.55}
+#feedback{min-height:35px;font-size:19px;font-weight:800;margin:12px 0}
+.progress{height:14px;background:#d6e8f8;border-radius:20px;overflow:hidden}.bar{height:100%;width:0;background:#21ad64;transition:width .5s}
+.badges{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+.badge{background:#fff0b3;border-radius:30px;padding:6px 14px;font-weight:800}
+.hidden{display:none!important}.center{text-align:center}
+@media(max-width:580px){.characters{grid-template-columns:repeat(2,1fr)}.lane{height:70px}.avatar{font-size:33px}.runner small{font-size:10px}.answers{gap:6px}.answer{font-size:24px}}
+@media(prefers-reduced-motion:reduce){.runner,.bar{transition:none}}
+
+.logo{width:64px;height:75px;object-fit:contain;background:white;border-radius:10px;padding:4px;float:left;margin-left:10px}
+.scene-title{font-size:22px;font-weight:900;padding:8px 12px;background:#fff4bb;border-radius:12px;margin-bottom:8px;text-align:center}
+.track{background:linear-gradient(#b9e8ff 0 20%,#80c96b 20% 100%);border-color:#2486b8;transition:background .3s}
+.track.beach{background:linear-gradient(#8ce6ff 0 35%,#ffd68b 35% 100%);border-color:#0a9fbe}
+.track.desert{background:linear-gradient(#f5bd66 0 25%,#e3a84b 25% 100%);border-color:#c58b2d}
+.track.mountain{background:linear-gradient(#a2c9f4 0 28%,#a1b1a0 28% 100%);border-color:#4d8492}
+.track.stadium{background:linear-gradient(#9edaf9 0 20%,#80d18b 20% 100%);border-color:#1760ab}
+.track:before{content:'🏟️ 👏 🎉 👏 🎈 👏 🥁 👏';position:absolute;top:0;left:5px;right:5px;text-align:center;z-index:1;font-size:20px;pointer-events:none;opacity:.9}
+.track.forest:before{content:'🌳 🌲 🐦 🌳 🌼 🌲 🌳'}
+.track.beach:before{content:'☀️ 🌴 🌊 🏖️ 🐚 🌴 ☀️'}
+.track.desert:before{content:'☀️ 🌵 🏜️ 🌵 🐪 🌵 ☀️'}
+.track.mountain:before{content:'⛰️ 🌤️ 🏔️ 🦅 🌲 🏔️ ⛰️'}
+.lane{height:88px;border-bottom:4px dashed #fff; background:repeating-linear-gradient(90deg,#c58058 0 32px,#cb8b63 32px 64px)}
+.runner{z-index:2;animation:bob .45s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-5px)}}
+.obstacle-tip{text-align:center;background:#ffebc7;color:#804500;border-radius:12px;padding:9px;margin-top:12px;font-weight:750}
+.celebration{font-size:65px;animation:party .8s ease-in-out infinite alternate}
+@keyframes party{to{transform:scale(1.13) rotate(7deg)}}
+@media(prefers-reduced-motion:reduce){.runner,.celebration{animation:none}}
+@media(max-width:600px){.logo{float:none;display:block;margin:0 auto 8px}.lane{height:74px}}
+.story{background:#fff5db;border:3px solid #e6bb50;border-radius:18px;padding:15px;margin:12px 0;font-size:19px;line-height:1.5;color:#433617}.story strong{color:#774c00}.picture-groups{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}.picture-group{background:#fff;border:2px dashed #db9b35;border-radius:12px;padding:9px;min-width:56px;font-size:27px}.story-note{font-size:15px;color:#66532e}.reasoning{background:#eaf8ed;border:2px solid #66bb86;border-radius:16px;padding:13px;margin:12px 0;text-align:left}
+.reasoning h3{margin:0 0 9px;color:#175c38}.reasoning button{padding:9px;border-radius:10px;border:2px solid #7ebca1;background:#fff;margin:4px;cursor:pointer;font-weight:750}
+.reasoning button.active{background:#c4f3d2;border-color:#17804d}.groups{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:12px;background:white;border-radius:12px}
+.group{border:2px dashed #269d62;border-radius:12px;padding:8px;min-width:46px;text-align:center;font-size:22px}
+.explain{background:#fff4cb;border-left:6px solid #f2bb2c;border-radius:10px;padding:12px;margin-top:10px;line-height:1.5}
+.next-question{margin-top:12px}
+@media(max-width:580px){.reasoning button{font-size:13px;padding:7px}}
+.runner small{max-width:135px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#playerLabel{background:#e2f8e7;border-radius:12px;padding:5px 10px;color:#165c35}
+
+.podium-wrap{margin:18px auto 20px;max-width:680px;background:linear-gradient(#e3f5ff,#fff);border:3px solid #c8e7ff;border-radius:20px;padding:15px}
+.podium-heading{color:#075295;font-size:23px;margin:3px 0 12px}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;min-height:270px}
+.podium-place{width:32%;display:flex;flex-direction:column;align-items:center;min-width:0}
+.podium-avatar{font-size:clamp(38px,7vw,61px);animation:podiumBounce 1.2s ease-in-out 3}
+.podium-name{font-weight:900;color:#15416a;overflow-wrap:anywhere;font-size:clamp(12px,2.5vw,17px);margin:5px 0}
+.podium-medal{font-size:32px}
+.podium-step{width:100%;display:flex;justify-content:center;align-items:center;color:#fff;font-weight:1000;font-size:36px;border-radius:10px 10px 3px 3px;text-shadow:1px 2px #0003}
+.podium-place.first .podium-step{height:120px;background:linear-gradient(#fbd76c,#e3a30d)}
+.podium-place.second .podium-step{height:90px;background:linear-gradient(#cad9e5,#8097b0)}
+.podium-place.third .podium-step{height:65px;background:linear-gradient(#e7ac7c,#b86d39)}
+.podium-place.you .podium-name{background:#fff0a7;padding:5px 8px;border-radius:9px;border:2px solid #f6bd2e}
+.fourth-place{background:#e8f4ff;border-radius:12px;padding:10px;margin:12px auto 0;font-weight:750}
+@keyframes podiumBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@media(prefers-reduced-motion:reduce){.podium-avatar{animation:none}}
+</style></head><body>
+<header><img src="insignia.png" alt="Insignia de la I.E. N.º 34120" class="logo"><h1>🏁 MULTIPLICA CARRERA</h1><p>¡Nuevo reto! Tablas del 1 al 5 · 2.º grado</p><small>I.E. N.º 34120 «Almirante Miguel Grau» · Chipipata</small></header>
+<main>
+<section id="start" class="panel center"><h2>🎽 Elige tu corredor</h2><p>Compite contra otros tres participantes. ¡Cada respuesta correcta te hace avanzar!</p>
+<div class="characters" id="characters">
+<button class="character chosen" data-id="0"><span class="face">👧🏽</span>Lucía veloz</button>
+<button class="character" data-id="1"><span class="face">👦🏻</span>Mateo relámpago</button>
+<button class="character" data-id="2"><span class="face">👧🏻</span>Valeria campeona</button>
+<button class="character" data-id="3"><span class="face">👦🏽</span>Diego corredor</button>
+</div>
+<p><label for="student">✍️ Escribe tu nombre para competir:</label> <input id="student" maxlength="20" required autocomplete="off" placeholder="Ejemplo: Ana" style="padding:10px;border:2px solid #aac6df;border-radius:10px;max-width:220px"></p>
+<p class="muted">Cinco carreras: bosque, playa, desierto, montaña y estadio olímpico. ¡60 desafíos, de las tablas del 1 al 5!</p>
+<p id="nameError" role="alert" style="color:#b21d31;font-weight:800"></p><button id="startBtn" class="primary">🚦 ¡Comenzar carrera!</button></section>
+<section id="game" class="hidden">
+<div class="panel"><div class="status"><span id="playerLabel">🏃 Mi corredor</span><span id="roundLabel">Carrera 1</span><span id="qLabel">Pregunta 1/10</span><span id="scoreLabel">⭐ 0 puntos</span></div>
+<div id="sceneTitle" class="scene-title">🌳 Bosque veloz</div><div class="track" id="track" aria-label="Pista con cuatro carriles y cuatro corredores"></div>
+<div class="progress" aria-label="Progreso de preguntas"><div class="bar" id="bar"></div></div>
+<div class="obstacle-tip" id="obstacle">🚧 ¡Supera las vallas resolviendo multiplicaciones!</div><div class="badges"><span class="badge" id="coins">🪙 0 monedas</span><span class="badge" id="medals">🏅 0 medallas</span></div></div>
+<div class="panel question"><h2 id="challenge">¡Piensa, resuelve y acelera!</h2><div class="story hidden" id="story" aria-live="polite"></div><div class="equation" id="equation"></div><div id="visual" style="font-size:24px;overflow-wrap:anywhere"></div>
+<div class="reasoning"><h3>🧠 Primero piensa: ¿cómo puedes resolverlo?</h3>
+<div><button type="button" id="showGroups">🔵 Ver grupos</button><button type="button" id="showSums">➕ Sumas repetidas</button><button type="button" id="showSteps">👣 Contar saltos</button></div>
+<div id="reasonVisual" aria-live="polite"></div></div>
+<p style="font-weight:800">👇 Elige la respuesta correcta:</p><div class="answers" id="answers"></div><div id="feedback" role="status" aria-live="polite"></div><button id="hint" style="padding:10px;border:2px solid #b8d3ed;border-radius:12px;background:white;cursor:pointer">💡 Ver pista</button>
+<div id="hintText" class="muted hidden" style="padding:8px"></div>
+<div id="explanation" class="explain hidden" aria-live="polite"></div>
+<button id="continueQuestion" class="primary next-question hidden">➡️ Continuar carrera</button></div></section>
+<section id="result" class="panel center hidden"><h2 id="resultTitle"></h2><p id="resultText"></p><div class="celebration" id="trophy">🏆</div><p id="resultStats"></p><div id="podiumWrap" class="podium-wrap" aria-live="polite"></div><button id="nextBtn" class="primary">Continuar</button></section>
+</main><script>
+const racers=[{name:'Lucía',icon:'👧🏽'},{name:'Mateo',icon:'👦🏻'},{name:'Valeria',icon:'👧🏻'},{name:'Diego',icon:'👦🏽'}];
+const stages=[{name:'Bosque veloz',icon:'🌳',class:'forest',table:1},{name:'Playa de las olas',icon:'🏖️',class:'beach',table:2},{name:'Desierto del sol',icon:'🏜️',class:'desert',table:3},{name:'Montaña del desafío',icon:'⛰️',class:'mountain',table:4},{name:'Estadio olímpico',icon:'🏟️',class:'stadium',table:5}];
+let playerName='',chosen=0,round=0,index=0,points=0,coins=0,medals=0,correct=0,positions=[0,0,0,0],questions=[],locked=false,audio=null,attempts=0;
+const $=id=>document.getElementById(id);
+function sound(freq=440,duration=.12){try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.setValueAtTime(freq,audio.currentTime);g.gain.setValueAtTime(.07,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+duration);}catch(e){}}
+function fanfare(){[440,550,660,880].forEach((f,i)=>setTimeout(()=>sound(f,.22),i*160));}
+document.querySelectorAll('.character').forEach(b=>b.addEventListener('click',()=>{chosen=+b.dataset.id;document.querySelectorAll('.character').forEach(x=>x.classList.toggle('chosen',x===b));sound(520,.08);}));
+const contexts=[
+{place:'En una chacra de Chipipata',things:'papas',unit:'canastas',icon:'🥔',verb:'hay'},
+{place:'En el huerto escolar',things:'plantitas',unit:'surcos',icon:'🌱',verb:'hay'},
+{place:'En el mercado de la comunidad',things:'manzanas',unit:'bolsas',icon:'🍎',verb:'hay'},
+{place:'En el aula de segundo grado',things:'lápices',unit:'cajitas',icon:'✏️',verb:'hay'},
+{place:'En una feria de Chipipata',things:'choclos',unit:'canastas',icon:'🌽',verb:'hay'},
+{place:'En la escuela',things:'cuadernos',unit:'mesas',icon:'📘',verb:'hay'},
+{place:'En un jardín de Chipipata',things:'flores',unit:'macetas',icon:'🌼',verb:'hay'},
+{place:'En una tienda de la comunidad',things:'panes',unit:'bolsas',icon:'🥖',verb:'hay'},
+{place:'En una actividad deportiva',things:'pelotas',unit:'cestas',icon:'⚽',verb:'hay'},
+{place:'En una celebración escolar',things:'banderines',unit:'filas',icon:'🚩',verb:'hay'}];
+const TOTAL_QUESTIONS=12;
+function buildQuestions(){const list=[];const table=stages[round].table;
+for(let n=1;n<=TOTAL_QUESTIONS;n++){
+let c=contexts[(n-1+round*2)%contexts.length];
+let count=n;
+list.push({a:table,b:count,result:table*count,context:c,story:count+' '+c.unit+' con '+table+' '+c.things+' en cada una. ¿Cuántos '+c.things+' hay en total?'});
+}
+for(let i=list.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[list[i],list[j]]=[list[j],list[i]];}return list;}
+function storyPicture(q){return '<strong>📍 '+q.context.place+'</strong><br>'+q.story+'<div class="picture-groups">'+Array.from({length:q.b},()=>'<div class="picture-group">'+Array(q.a).fill(q.context.icon).join('')+'</div>').join('')+'</div><div class="story-note">👀 Cada recuadro representa un grupo. Cuenta los dibujos para comprobar tu respuesta.</div>';}
+function makeTrack(){const track=$('track');track.innerHTML='';track.className='track '+stages[round].class;racers.forEach((r,i)=>{let lane=document.createElement('div');lane.className='lane';lane.innerHTML='<div class="finish" aria-hidden="true"></div><div class="runner" id="runner'+i+'"><span class="avatar">'+r.icon+'</span><small>'+(i===chosen?playerName+' ⭐ TÚ':r.name)+'</small></div>';track.append(lane);});moveRunners();}
+function moveRunners(){positions.forEach((pos,i)=>{let el=$('runner'+i);if(el)el.style.left='min('+Math.min(pos,95)+'%, calc(100% - 105px))';});}
+function startRound(){$('playerLabel').textContent='🏃 '+playerName+' · ¡Tú puedes!';index=0;correct=0;positions=[0,0,0,0];questions=buildQuestions();$('start').classList.add('hidden');$('result').classList.add('hidden');$('game').classList.remove('hidden');$('sceneTitle').textContent=stages[round].icon+' '+stages[round].name;$('obstacle').textContent='🚧 ¡Salta las vallas resolviendo las multiplicaciones!';makeTrack();sound(330,.15);setTimeout(()=>sound(520,.2),180);ask();}
+function options(answer){
+const candidates=[answer-1,answer+1,answer-2,answer+2,answer-5,answer+5,answer-10,answer+10,answer+3,answer-3].filter(n=>n>=0&&n!==answer);
+for(let i=candidates.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[candidates[i],candidates[j]]=[candidates[j],candidates[i]];}
+let set=new Set([answer]);for(const n of candidates){if(set.size>=4)break;set.add(n);}return [...set].sort(()=>Math.random()-.5);}
+function ask(){locked=false;attempts=0;let q=questions[index];$('reasonVisual').innerHTML='';$('explanation').classList.add('hidden');$('continueQuestion').classList.add('hidden');$('roundLabel').textContent='🏁 Carrera '+(round+1)+' de 5 · '+stages[round].name;$('qLabel').textContent='Pregunta '+(index+1)+' de '+TOTAL_QUESTIONS;$('scoreLabel').textContent='⭐ '+points+' puntos';$('bar').style.width=(index/TOTAL_QUESTIONS*100)+'%';$('coins').textContent='🪙 '+coins+' monedas';$('medals').textContent='🏅 '+medals+' medallas';$('equation').textContent=q.a+' × '+q.b+' = ?';$('story').innerHTML=storyPicture(q);$('story').classList.remove('hidden');$('visual').textContent='';$('feedback').textContent='';$('hintText').classList.add('hidden');$('answers').innerHTML='';options(q.result).forEach(n=>{let b=document.createElement('button');b.className='answer';b.textContent=n;b.addEventListener('click',()=>answer(n));$('answers').append(b);});}
+function showMethod(method){
+const q=questions[index],box=$('reasonVisual');document.querySelectorAll('.reasoning button').forEach(b=>b.classList.toggle('active',b.id===method));
+if(method==='showGroups'){box.innerHTML='<p><strong>'+q.b+' grupos de '+q.a+' elementos:</strong></p><div class="groups">'+Array.from({length:q.b},()=>'<div class="group">'+Array(q.a).fill(q.context.icon).join(' ')+'</div>').join('')+'</div><p>Cuenta todos los círculos. ¿Cuántos hay?</p>';}
+if(method==='showSums'){box.innerHTML='<p>Repite el número <strong>'+q.a+'</strong>, <strong>'+q.b+'</strong> veces:</p><div class="equation" style="font-size:24px">'+Array(q.b).fill(q.a).join(' + ')+' = ?</div>';}
+if(method==='showSteps'){box.innerHTML='<p>Da '+q.b+' saltos, de '+q.a+' en '+q.a+':</p><div class="groups">'+Array.from({length:q.b},(_,i)=>'<div class="group">👣<br>'+((i+1)*q.a)+'</div>').join('')+'</div>';}
+}
+function answer(n){
+if(locked)return;
+let q=questions[index],good=n===q.result;
+if(!good&&attempts===0){attempts++;$('feedback').textContent='🤔 Todavía no. ¡Mira los grupos o las sumas y vuelve a intentar!';showMethod('showGroups');sound(260,.14);return;}
+locked=true;document.querySelectorAll('.answer').forEach(b=>{b.disabled=true;if(Number(b.textContent)===q.result)b.style.background='#b4f0bf';});
+if(good){points+=10;coins+=2;correct++;positions[chosen]+=9.5;$('feedback').textContent='🎉 ¡Correcto! ¡Saltaste la valla y avanzaste!';sound(660,.15);setTimeout(()=>sound(880,.18),140);}
+else{$('feedback').textContent='💡 ¡Buen intento! Vamos a descubrir cómo se obtiene el resultado.';positions[chosen]+=3;sound(240,.2);}
+racers.forEach((_,i)=>{if(i!==chosen)positions[i]+=4+Math.random()*4.5;});moveRunners();
+$('scoreLabel').textContent='⭐ '+points+' puntos';$('coins').textContent='🪙 '+coins+' monedas';
+$('explanation').innerHTML='<strong>🧠 ¿Por qué '+q.a+' × '+q.b+' = '+q.result+'?</strong><br>Porque son '+q.b+' grupos de '+q.a+'.<br><strong>Suma repetida:</strong> '+Array(q.b).fill(q.a).join(' + ')+' = '+q.result+'.<br><strong>Compruébalo:</strong> cuenta '+q.b+' veces de '+q.a+' en '+q.a+'.';
+$('explanation').classList.remove('hidden');$('continueQuestion').classList.remove('hidden');
+}
+$('continueQuestion').addEventListener('click',()=>{index++;if(index<TOTAL_QUESTIONS)ask();else finishRound();});
+['showGroups','showSums','showSteps'].forEach(id=>$(id).addEventListener('click',()=>showMethod(id)));
+function renderPodium(){
+const ranks=racers.map((r,i)=>({i,position:positions[i],name:i===chosen?playerName:r.name,icon:r.icon}))
+.sort((a,b)=>b.position-a.position||a.i-b.i);
+const podium=$('podiumWrap');podium.replaceChildren();
+const title=document.createElement('h3');title.className='podium-heading';title.textContent='🏆 Podio de premiación';podium.append(title);
+const row=document.createElement('div');row.className='podium';
+[1,0,2].forEach((rank)=>{const r=ranks[rank];const place=document.createElement('div');place.className='podium-place '+['first','second','third'][rank]+(r.i===chosen?' you':'');
+const icon=document.createElement('div');icon.className='podium-avatar';icon.textContent=r.icon;
+const medal=document.createElement('div');medal.className='podium-medal';medal.textContent=['🥇','🥈','🥉'][rank];
+const name=document.createElement('div');name.className='podium-name';name.textContent=r.name+(r.i===chosen?' ⭐ TÚ':'');
+const step=document.createElement('div');step.className='podium-step';step.textContent=String(rank+1);
+place.append(icon,medal,name,step);row.append(place);});
+podium.append(row);
+const fourth=ranks[3];const line=document.createElement('p');line.className='fourth-place';line.textContent='🏅 4.º lugar: '+fourth.icon+' '+fourth.name+(fourth.i===chosen?' ⭐ TÚ':'');podium.append(line);
+return ranks.findIndex(r=>r.i===chosen)+1;
+}
+function finishRound(){$('game').classList.add('hidden');$('result').classList.remove('hidden');$('bar').style.width='100%';const place=renderPodium();const win=place===1;if(win)medals++;fanfare();
+$('resultTitle').textContent=win?'🏆 ¡Ganaste la carrera '+(round+1)+'!':'🌟 ¡Terminaste la carrera '+(round+1)+'!';
+$('resultText').textContent=playerName+', completaste '+stages[round].name+'. ¡Conseguiste el '+place+'.º lugar! '+(win?'¡Medalla de oro!':place===2?'¡Medalla de plata!':place===3?'¡Medalla de bronce!':'¡Sigue practicando y mejorarás!');
+$('resultStats').textContent='Aciertos: '+correct+'/10 · Puntos: '+points+' · Monedas: '+coins+' · Medallas: '+medals;
+$('trophy').textContent=win?'🎉🏆🎊':'🎈⭐🎁';$('nextBtn').textContent=round<4?'➡️ Siguiente carrera':'🏁 Terminar y volver a jugar';}
+$('hint').addEventListener('click',()=>{showMethod('showSums');$('hintText').textContent='Pista: cuenta cada número de la suma y elige el total. ¡Tú puedes!';$('hintText').classList.remove('hidden');});
+$('startBtn').addEventListener('click',()=>{const entered=$('student').value.trim().replace(/\s+/g,' ');if(!entered){$('nameError').textContent='😊 Escribe tu nombre antes de comenzar.';$('student').focus();return;}playerName=entered.slice(0,20);$('nameError').textContent='';round=0;points=0;coins=0;medals=0;startRound();});
+$('nextBtn').addEventListener('click',()=>{if(round<4){round++;startRound();}else{$('result').classList.add('hidden');$('start').classList.remove('hidden');}});
+</script></body></html>

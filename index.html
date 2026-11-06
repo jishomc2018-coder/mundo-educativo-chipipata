@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#093d8c"><meta name="description" content="Biblioteca de juegos educativos de la I.E. 34120 Almirante Miguel Grau, Chipipata.">
+<title>Mundo Educativo Digital | Chipipata</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#12294d;background:#eef5ff}
+*{box-sizing:border-box}body{margin:0;min-height:100vh}button,a{font:inherit}button{cursor:pointer}
+.hero{position:relative;overflow:hidden;text-align:center;color:white;padding:28px 16px 96px;background:linear-gradient(115deg,rgba(3,29,77,.92),rgba(5,65,132,.78) 52%,rgba(5,53,113,.65)),url("imagenes/institucion.jpg") center 46% / cover no-repeat;border-bottom:9px solid #ffcb26}
+.hero:before,.hero:after{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:#ffffff12;pointer-events:none}
+.hero:before{top:-130px;left:-80px}.hero:after{right:-80px;bottom:-120px}
+.hero > :not(.hero-photos){position:relative;z-index:1}.brand{display:flex;align-items:center;justify-content:center;gap:14px;max-width:900px;margin:0 auto 18px;text-align:left}
+.logo{width:106px;height:136px;object-fit:contain;background:white;padding:8px;border:3px solid #ffcf38;border-radius:15px;box-shadow:0 8px 22px #001e4770}
+.school{font-size:clamp(14px,2.5vw,19px);font-weight:850;line-height:1.4}.school small{display:block;color:#ffdb61;font-size:13px;letter-spacing:.06em}
+.pill{display:inline-block;background:#ffffff2b;border:1px solid #ffffff66;border-radius:50px;padding:7px 16px;font-weight:700;font-size:13px}
+h1{font-size:clamp(32px,6vw,62px);line-height:1.05;margin:14px auto 12px;max-width:900px;text-shadow:0 4px 0 #001d4960}
+.hero p{font-size:clamp(16px,2.5vw,21px);margin:0 auto 15px;max-width:780px}
+.hero strong.yellow{color:#ffe068}
+.scene{height:92px;max-width:780px;margin:14px auto -70px;position:relative;display:flex;align-items:end;justify-content:space-around;pointer-events:none}
+.cloud{font-size:38px;animation:float 4s ease-in-out infinite alternate}.coin{font-size:39px;animation:spin 2s ease-in-out infinite alternate}.castle{font-size:66px;filter:drop-shadow(0 5px 1px #09224e77)}
+.explorer{font-size:66px;display:inline-block;animation:hop 1.4s ease-in-out infinite;filter:drop-shadow(0 7px 1px #082d5966)}
+@keyframes hop{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-20px) rotate(4deg)}}
+@keyframes float{to{transform:translateY(-14px)}}@keyframes spin{to{transform:rotate(25deg) scale(1.12)}}
+.container{max-width:1150px;margin:0 auto;padding:45px 18px 50px;position:relative}
+.panel{background:white;border:2px solid #d7e5f7;border-radius:26px;padding:clamp(22px,4vw,36px);box-shadow:0 15px 40px #163d7820}
+.center{text-align:center}h2{font-size:clamp(24px,4vw,34px);margin:0 0 8px}p{line-height:1.55}
+.grades{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;max-width:800px;margin:28px auto 12px}
+.grade{border:3px solid #ffffff;border-radius:24px;padding:22px 10px;min-height:148px;box-shadow:0 8px 0 #b5cce8,0 12px 22px #193a6c16;color:#082b64;background:linear-gradient(145deg,#f8fbff,#d7eaff);transition:transform .2s,box-shadow .2s}
+.grade:nth-child(2),.grade:nth-child(5){background:linear-gradient(145deg,#fff9e0,#ffe59d)}
+.grade:nth-child(3),.grade:nth-child(6){background:linear-gradient(145deg,#ffe9ec,#ffd0d9)}
+.grade:hover,.grade:focus-visible{transform:translateY(-5px);box-shadow:0 12px 0 #b5cce8,0 16px 24px #193a6c20}
+.grade .icon{display:block;font-size:45px;margin-bottom:8px}.grade b{font-size:clamp(19px,2.5vw,25px)}
+.note{color:#4b6485;font-size:14px}.hidden{display:none!important}
+.back{border:2px solid #0f5ba8;background:#fff;color:#0b4c91;padding:11px 18px;border-radius:14px;font-weight:800;margin-bottom:20px}
+.back:hover{background:#eaf5ff}
+.chosen{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:20px}
+.chosen h2{margin:0}.count{background:#fff1b8;color:#6c4b00;border-radius:30px;padding:9px 15px;font-weight:800}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 22px}
+.filter{border:2px solid #c5d8ef;border-radius:30px;padding:10px 17px;background:white;color:#12447c;font-weight:800}
+.filter.active{background:#e12530;color:white;border-color:#e12530}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.card{background:white;border-radius:24px;overflow:hidden;border:2px solid #dfebfa;box-shadow:0 10px 24px #163d7814;display:flex;flex-direction:column;transition:transform .2s}
+.card:hover{transform:translateY(-5px)}
+.art{height:140px;display:grid;place-items:center;font-size:66px;background:linear-gradient(130deg,#d4f6e5,#b9e7ff)}
+.card:nth-child(2n) .art{background:linear-gradient(130deg,#fff0bf,#ffd6a5)}
+.card:nth-child(3n) .art{background:linear-gradient(130deg,#e2dbff,#ffdeeb)}
+.card-body{padding:20px;display:flex;flex-direction:column;flex:1}
+.tag{font-size:12px;color:#0c5d9c;font-weight:900;text-transform:uppercase;letter-spacing:.03em}
+.card h3{margin:9px 0 4px;font-size:23px}.card p{margin:6px 0 18px;flex:1}
+.play,.soon{display:block;text-align:center;text-decoration:none;border-radius:13px;padding:13px 16px;font-weight:900}
+.play{background:#e12530;color:white;box-shadow:0 4px 0 #a30e1a}.play:hover{background:#b91420}
+.soon{background:#e9eff7;color:#596c82}
+.empty{border:2px dashed #f1c044;background:#fff9e2;border-radius:20px;padding:22px;text-align:center;font-weight:700;margin:20px 0}
+footer{background:#072d67;color:white;text-align:center;padding:30px 16px;line-height:1.8;border-top:7px solid #e12530}
+footer .accent{color:#ffe066}a:focus-visible,button:focus-visible{outline:4px solid #ffca20;outline-offset:4px}
+.hero-photos{display:flex;justify-content:center;gap:15px;flex-wrap:wrap;max-width:1000px;margin:20px auto 0;position:relative;z-index:2}.hero-photos figure{margin:0;width:clamp(175px,27vw,275px);background:white;padding:6px 6px 9px;border-radius:17px;box-shadow:0 8px 25px #00132b88;transform:rotate(-2deg)}.hero-photos figure:nth-child(2){transform:rotate(2deg)}.hero-photos figure:nth-child(3){transform:rotate(-1deg)}.hero-photos img{display:block;width:100%;height:150px;object-fit:cover;border-radius:12px}.hero-photos figcaption{color:#153968;font-size:12px;font-weight:800;margin-top:7px}.hero-photos figure:hover{transform:translateY(-4px)}.hero-photos .featured-photo{width:min( min(88vw,680px), 680px);transform:none;padding:8px 8px 12px}.hero-photos .featured-photo img{height:clamp(190px,34vw,350px);object-fit:cover}.hero-photos .featured-photo figcaption{font-size:15px}
+.hero-gallery{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;width:min( min(92vw,760px), 760px);margin:2px auto 0}
+.hero-choice{border:3px solid #fff;background:#fff;padding:4px;border-radius:13px;cursor:pointer;box-shadow:0 5px 15px #00132b66;transition:transform .18s,border-color .18s,box-shadow .18s;min-width:0}
+.hero-choice img{display:block;width:100%;height:82px;object-fit:cover;border-radius:8px}
+.hero-choice:hover,.hero-choice:focus-visible{transform:translateY(-4px);border-color:#ffdb45}
+.hero-choice.selected{border-color:#ffdb45;box-shadow:0 0 0 3px #ffffff88,0 7px 18px #00132b88}
+@media(max-width:600px){.hero-gallery{gap:5px;width:94vw}.hero-choice{padding:3px;border-width:2px;border-radius:9px}.hero-choice img{height:58px;border-radius:6px}}.gallery figure{cursor:pointer;transition:transform .18s,border-color .18s}.gallery figure:hover,.gallery figure:focus-within{transform:translateY(-4px);border-color:#1766b5}.gallery figure.selected{border:4px solid #1766b5;box-shadow:0 0 0 4px #ffcf38,0 8px 22px #123e7020}.gallery figure button{display:block;width:100%;border:0;background:transparent;padding:0;text-align:left;color:inherit;cursor:pointer}.gallery figure button:focus-visible{outline:4px solid #ffca20;outline-offset:-4px}.gallery figcaption:after{content:' · Toca para destacar arriba';font-size:11px;color:#1766b5;font-weight:800}@media(max-width:600px){.brand{flex-direction:column;text-align:center}.logo{width:90px;height:116px}.hero-photos{gap:8px}.hero-photos figure{width:30%;min-width:98px;padding:4px}.hero-photos img{height:90px}.hero-photos figcaption{font-size:10px}.grades{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grade{min-height:130px;padding:15px 6px}.grade .icon{font-size:38px}.scene{height:90px}.explorer{font-size:50px}.castle{font-size:48px}.hero{padding-bottom:80px}.container{padding-top:32px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+.navbar{background:#fff;position:sticky;top:0;z-index:15;box-shadow:0 3px 14px #0b376b23;border-bottom:3px solid #ffcb26}
+.navbar-inner{max-width:1150px;margin:auto;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;padding:9px 14px}
+.navbar a{color:#0b4386;text-decoration:none;font-weight:850;padding:10px 13px;border-radius:12px}
+.navbar a:hover,.navbar a:focus-visible{background:#e5f2ff}
+.showcase{margin-top:30px}
+.showcase h2{color:#0a3c80}
+.section-lead{max-width:800px;color:#496482;margin:0 auto 25px}
+.value-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:22px 0}
+.value{background:#f0f7ff;border:2px solid #d9e9fb;border-radius:18px;padding:19px;text-align:left}
+.value b{display:block;font-size:18px;margin:8px 0}.value span{font-size:33px}.value p{margin:0;color:#365678}
+.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:20px}
+.gallery figure{margin:0;background:#fff;border:2px solid #dceafa;border-radius:19px;overflow:hidden;box-shadow:0 8px 22px #123e7020}
+.gallery img{width:100%;height:210px;object-fit:cover;display:block}
+.gallery figcaption{padding:12px 15px;color:#23466f;font-weight:750}
+.project-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}
+.project-step{border-top:5px solid #e12530;background:#fff8e8;padding:17px;border-radius:13px;text-align:left}
+.project-step strong{display:block;color:#0a458a;margin-bottom:8px}
+.callout{background:#073f86;color:white;border-radius:18px;padding:20px;margin-top:22px}
+.callout p{margin:7px 0 0}.callout strong{color:#ffdc55}
+#grados,#proyecto,#evidencias{scroll-margin-top:75px}
+@media(max-width:700px){.value-grid,.gallery{grid-template-columns:1fr}.project-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.gallery img{height:230px}.navbar a{font-size:13px;padding:8px}}
+</style></head>
+<body>
+<header class="hero">
+<div class="brand"><img class="logo" src="insignia_ie34120.png" alt="Insignia de la Institución Educativa N.º 34120 Almirante Miguel Grau" width="88" height="112">
+<div class="school"><small>INSTITUCIÓN EDUCATIVA N.º 34120</small>«ALMIRANTE MIGUEL GRAU»<br>CHIPIPATA · NIVEL PRIMARIA</div></div>
+<span class="pill">✨ Plataforma de juegos educativos</span>
+<h1>🌎 MUNDO<br><strong class="yellow">EDUCATIVO DIGITAL</strong></h1>
+<p>¡Aprende, juega y conquista nuevas aventuras!</p>
+<div class="scene" aria-hidden="true"><span class="cloud">☁️</span><span class="explorer">🧑‍🚀</span><span class="coin">🪙</span><span class="castle">🏰</span><span class="cloud">☁️</span></div>
+<div class="hero-photos" aria-label="Fotografías interactivas de nuestra comunidad educativa">
+<figure class="featured-photo"><img id="featured-photo" src="imagenes/experiencia_aula_innovacion.jpg" alt="Estudiantes utilizando tabletas y computadoras en el aula de innovación pedagógica" loading="eager"><figcaption id="featured-caption">💻 Aula de innovación pedagógica en acción</figcaption></figure>
+<div class="hero-gallery" aria-label="Selecciona una fotografía destacada">
+<button type="button" class="hero-choice selected" data-photo="imagenes/experiencia_aula_innovacion.jpg" data-alt="Estudiantes utilizando tabletas y computadoras en el aula de innovación pedagógica" data-caption="💻 Aula de innovación pedagógica en acción" aria-label="Mostrar aula de innovación"><img src="imagenes/experiencia_aula_innovacion.jpg" alt=""></button>
+<button type="button" class="hero-choice" data-photo="imagenes/institucion.jpg" data-alt="Vista exterior de la institución educativa Almirante Miguel Grau de Chipipata" data-caption="🏫 Nuestra institución educativa" aria-label="Mostrar nuestra institución"><img src="imagenes/institucion.jpg" alt=""></button>
+<button type="button" class="hero-choice" data-photo="imagenes/estudiantes_1.jpg" data-alt="Estudiantes participando en actividades con tabletas educativas" data-caption="📱 Uso educativo de tabletas" aria-label="Mostrar uso educativo de tabletas"><img src="imagenes/estudiantes_1.jpg" alt=""></button>
+<button type="button" class="hero-choice" data-photo="imagenes/estudiantes_2.jpg" data-alt="Estudiantes aprendiendo con recursos digitales en el aula" data-caption="🤝 Aprendizaje activo" aria-label="Mostrar aprendizaje activo"><img src="imagenes/estudiantes_2.jpg" alt=""></button>
+<button type="button" class="hero-choice" data-photo="imagenes/estudiantes_3.jpg" data-alt="Estudiantes interactuando con sus tabletas en una actividad escolar" data-caption="🌟 Experiencias de aprendizaje" aria-label="Mostrar experiencias de aprendizaje"><img src="imagenes/estudiantes_3.jpg" alt=""></button>
+</div></div>
+</header>
+<nav class="navbar" aria-label="Secciones de la plataforma"><div class="navbar-inner"><a href="#grados">🎮 Juegos por grado</a><a href="#proyecto">💡 Nuestro proyecto</a><a href="#evidencias">📸 Experiencias en el aula</a></div></nav><main class="container">
+<section id="grados" aria-label="Selección de grado"><div id="select-screen" class="panel center" aria-labelledby="select-title">
+<h2 id="select-title">🎒 ¡Elige tu grado para comenzar!</h2><p>Selecciona tu grado y descubre los juegos preparados para ti.</p>
+<div class="grades">
+<button class="grade" data-grade="1"><span class="icon">🌈</span><b>1.º grado</b></button>
+<button class="grade" data-grade="2"><span class="icon">🚀</span><b>2.º grado</b></button>
+<button class="grade" data-grade="3"><span class="icon">🦋</span><b>3.º grado</b></button>
+<button class="grade" data-grade="4"><span class="icon">🌟</span><b>4.º grado</b></button>
+<button class="grade" data-grade="5"><span class="icon">🏆</span><b>5.º grado</b></button>
+<button class="grade" data-grade="6"><span class="icon">🧠</span><b>6.º grado</b></button>
+</div><p class="note">💻 Usa el mouse o toca la pantalla de tu tableta.</p>
+</div></section>
+<section id="catalog" class="hidden" aria-label="Juegos por grado">
+<button class="back" id="back">← Elegir otro grado</button>
+<div class="chosen"><h2 id="grade-title">Juegos educativos</h2><span class="count" id="game-count"></span></div>
+<div class="panel"><strong>👋 ¡Hola, explorador!</strong><p>Elige una aventura, aprende a tu ritmo y disfruta de cada desafío. Los juegos marcados «En preparación» estarán disponibles más adelante.</p>
+<div class="filters" role="group" aria-label="Filtrar por área">
+<button class="filter active" data-filter="todos" aria-pressed="true">🎲 Todos</button>
+<button class="filter" data-filter="matematica" aria-pressed="false">🔢 Matemática</button>
+<button class="filter" data-filter="comunicacion" aria-pressed="false">📖 Comunicación</button>
+<button class="filter" data-filter="ciencia" aria-pressed="false">🔬 Ciencia y Tecnología</button>
+</div>
+<div id="empty" class="empty hidden" role="status"></div>
+<div class="cards">
+<article class="card" data-grades="1" data-area="comunicacion" data-ready="true"><div class="art" aria-hidden="true">🌈🦋📚</div><div class="card-body"><span class="tag">Comunicación · Disponible · 1.º grado</span><h3>SÍLABAS MÁGICAS</h3><p>¡Cinco mundos y 64 retos! Monosílabas, bisílabas, trisílabas y sílabas trabadas. Arrastra palabras a sus dibujos, escucha audios y gana tu diploma.</p><a class="play" href="juegos/silabas-magicas/index.html">▶ ¡Jugar y leer!</a></div></article>
+<article class="card" data-grades="2" data-area="matematica" data-ready="true"><div class="art" aria-hidden="true">🦊🌴🏆</div><div class="card-body"><span class="tag">Matemática · Disponible · 2.º grado</span><h3>DIVIAVENTURA – LA GRAN COPA</h3><p>¡Cinco mundos, 80 divisiones, saltos, monedas, estrellas y trofeos! Supera la selva, la playa, el volcán, la montaña y el castillo.</p><a class="play" href="juegos/diviaventura-segundo/index.html">▶ 🦊 ¡JUGAR DIVIAVENTURA!</a></div></article>
+<article class="card" data-grades="2" data-area="matematica" data-ready="true"><div class="art" aria-hidden="true">🏃‍♀️🏁🥇</div><div class="card-body"><span class="tag">Matemática · Disponible · 2.º grado</span><h3>MULTIPLICA CARRERA</h3><p>¡Elige tu corredor, escribe tu nombre y compite en cinco carreras! Supera 60 desafíos de las tablas del 1 al 5, con cuatro opciones, problemas de Chipipata y un podio con medallas.</p><a class="play" href="juegos/multiplica-carrera/index.html">▶ ¡Empezar a correr!</a></div></article>
+<article class="card" data-grades="5" data-area="matematica" data-ready="true"><div class="art" aria-hidden="true">🏎️🏁⚡</div><div class="card-body"><span class="tag">Matemática · Disponible · 5.º grado</span><h3>MULTIPLICA CARRERA – QUINTO GRADO</h3><p>¡Compite en cinco mundos y supera 60 retos! Practica multiplicaciones con números enteros, números de tres cifras, decimales y fracciones. Cada acierto impulsa tu auto hacia la meta.</p><a class="play" href="juegos/multiplica-carrera-quinto/index.html">▶ ¡Iniciar gran campeonato!</a></div></article>
+<article class="card" data-grades="5" data-area="matematica" data-ready="true"><div class="art" aria-hidden="true">🏃🪙🏰</div><div class="card-body"><span class="tag">Matemática · Disponible</span><h3>DIVIAVENTURAS 2.0</h3><p>¡Salta, recoge monedas y resuelve 90 retos de división en cinco mundos!</p><a class="play" href="juegos/diviaventuras/index.html">▶ ¡Jugar ahora!</a></div></article>
+<article class="card" data-grades="1,2" data-area="matematica"><div class="art" aria-hidden="true">🍎➕🐣</div><div class="card-body"><span class="tag">Matemática · Próximamente</span><h3>SUMA Y RESTA KIDS</h3><p>Aprende con objetos, dibujos y misiones divertidas.</p><span class="soon">🔒 En preparación</span></div></article>
+<article class="card" data-grades="6" data-area="matematica" data-ready="true"><div class="art" aria-hidden="true">🧑‍🚀🍄⭐</div><div class="card-body"><span class="tag">Matemática · Disponible · 6.º grado</span><h3>SUPER AVENTURA MATEMÁTICA</h3><p>¡Cinco mundos y 80 desafíos diferentes (16 por mundo)! Practica multiplicaciones, divisiones y operaciones combinadas en una aventura de plataformas llena de monedas, estrellas y retos.</p><a class="play" href="juegos/super-aventura-matematica-sexto/index.html">▶ ¡Comenzar aventura!</a></div></article>
+<article class="card" data-grades="3" data-area="matematica" data-ready="true"><div class="art" aria-hidden="true">🏎️🏁🏆</div><div class="card-body"><span class="tag">Matemática · Disponible · 3.º grado</span><h3>MULTIPLICA KART – TERCER GRADO</h3><p>¡Compite en cinco circuitos y supera 69 retos de multiplicación! Practica las tablas del 1 al 12 con números de una, dos, tres y cuatro cifras. ¡Gana la Gran Copa Chipipata!</p><a class="play" href="juegos/multiplica-kart-tercero/index.html">▶ 🏎️ ¡JUGAR AHORA!</a></div></article>
+<article class="card" data-grades="4" data-area="matematica" data-ready="true"><div class="art" aria-hidden="true">🏎️🏆⚡</div><div class="card-body"><span class="tag">Matemática · Disponible · 4.º grado</span><h3>MULTIPLICA KART 4 – COPA DE LOS CAMPEONES</h3><p>5 circuitos, 80 retos: multiplicaciones de 2, 3 y 4 cifras por multiplicadores de hasta 2 cifras, y problemas matemáticos.</p><a class="play" href="juegos/multiplica-kart-cuarto/index.html">▶ 🏁 ¡JUGAR AHORA!</a></div></article>
+<article class="card" data-grades="2" data-area="matematica"><div class="art" aria-hidden="true">🚀✖️🪐</div><div class="card-body"><span class="tag">Matemática · Próximamente</span><h3>MULTIPLICA KIDS</h3><p>Viaja por el espacio con las tablas de multiplicar.</p><span class="soon">🔒 En preparación</span></div></article>
+<article class="card" data-grades="4,5,6" data-area="matematica"><div class="art" aria-hidden="true">🍕🧩</div><div class="card-body"><span class="tag">Matemática · Próximamente</span><h3>FRACCIONAVENTURAS</h3><p>Descubre fracciones con retos visuales.</p><span class="soon">🔒 En preparación</span></div></article>
+<article class="card" data-grades="1,2,3,4,5,6" data-area="comunicacion"><div class="art" aria-hidden="true">📚🕵️</div><div class="card-body"><span class="tag">Comunicación · Próximamente</span><h3>LECTOAVENTURAS</h3><p>Lee historias, descubre pistas y resuelve misterios.</p><span class="soon">🔒 En preparación</span></div></article>
+<article class="card" data-grades="3,4,5,6" data-area="ciencia"><div class="art" aria-hidden="true">🌱🔬</div><div class="card-body"><span class="tag">Ciencia y Tecnología · Próximamente</span><h3>EXPLORADORES DE LA CIENCIA</h3><p>Investiga animales, plantas y el mundo natural.</p><span class="soon">🔒 En preparación</span></div></article>
+<article class="card" data-grades="5,6" data-area="matematica"><div class="art" aria-hidden="true">🧠🏅</div><div class="card-body"><span class="tag">Matemática · Próximamente</span><h3>RETOS MATEMÁTICOS</h3><p>Entrena tu lógica y resuelve problemas.</p><span class="soon">🔒 En preparación</span></div></article>
+</div></div></section>
+<section id="proyecto" class="panel showcase center" aria-labelledby="project-heading">
+<span class="pill" style="background:#e12530;color:white">PROYECTO DE INNOVACIÓN PEDAGÓGICA</span>
+<h2 id="project-heading" style="margin-top:14px">💡 Innovamos para aprender mejor</h2>
+<p class="section-lead">En la I.E. N.º 34120 «Almirante Miguel Grau» de Chipipata promovemos experiencias de aprendizaje con juegos digitales, participación activa y uso responsable de las tabletas educativas.</p>
+<div class="value-grid">
+<div class="value"><span>🎯</span><b>Nuestro propósito</b><p>Fortalecer los aprendizajes mediante retos lúdicos, progresivos y pertinentes para cada grado.</p></div>
+<div class="value"><span>🧩</span><b>Aprender haciendo</b><p>Resolver problemas, probar estrategias, recibir pistas y aprender de los errores.</p></div>
+<div class="value"><span>💻</span><b>Tecnología con sentido</b><p>Aprovechar las computadoras y tabletas disponibles para ampliar las oportunidades de aprendizaje.</p></div>
+</div>
+<h3 style="font-size:23px">🚀 ¿Cómo desarrollamos nuestra propuesta?</h3>
+<div class="project-steps">
+<div class="project-step"><strong>1. Identificamos</strong>Necesidades de aprendizaje de los estudiantes.</div>
+<div class="project-step"><strong>2. Diseñamos</strong>Juegos adecuados a los grados y competencias.</div>
+<div class="project-step"><strong>3. Experimentamos</strong>Actividades con apoyo docente en el aula.</div>
+<div class="project-step"><strong>4. Mejoramos</strong>Con evidencias y retroalimentación.</div>
+</div>
+<div class="callout"><strong>🎮 Nuestro primer videojuego: DIVIAVENTURAS 2.0</strong><p>DIVIAVENTURAS 2.0 está disponible para 5.º grado y MULTIPLICA CARRERA para 2.º grado. ¡Seguimos creando experiencias de aprendizaje para nuestra escuela!</p></div>
+</section>
+<section id="evidencias" class="panel showcase center" aria-labelledby="gallery-heading">
+<h2 id="gallery-heading">📸 Nuestra escuela aprende con tecnología</h2>
+<p class="section-lead">Conozca nuestra institución y algunas experiencias de uso de tabletas en el aula de innovación pedagógica.</p>
+<div class="gallery">
+<figure><button type="button" class="gallery-choice" data-photo="imagenes/institucion.jpg" data-alt="Vista exterior de la institución educativa Almirante Miguel Grau de Chipipata" data-caption="🏫 Nuestra institución educativa" aria-label="Mostrar fotografía: 🏫 Nuestra institución educativa"><img src="imagenes/institucion.jpg" alt="Vista exterior de la institución educativa Almirante Miguel Grau de Chipipata" loading="lazy"><figcaption>🏫 Nuestra institución educativa</figcaption></button></figure>
+<figure><button type="button" class="gallery-choice" data-photo="imagenes/estudiantes_1.jpg" data-alt="Estudiantes participando en actividades con tabletas educativas" data-caption="📱 Uso educativo de tabletas" aria-label="Mostrar fotografía: 📱 Uso educativo de tabletas"><img src="imagenes/estudiantes_1.jpg" alt="Estudiantes participando en actividades con tabletas educativas" loading="lazy"><figcaption>📱 Uso educativo de tabletas</figcaption></button></figure>
+<figure><button type="button" class="gallery-choice" data-photo="imagenes/estudiantes_2.jpg" data-alt="Estudiantes aprendiendo con recursos digitales en el aula" data-caption="🤝 Aprendizaje activo" aria-label="Mostrar fotografía: 🤝 Aprendizaje activo"><img src="imagenes/estudiantes_2.jpg" alt="Estudiantes aprendiendo con recursos digitales en el aula" loading="lazy"><figcaption>🤝 Aprendizaje activo</figcaption></button></figure>
+<figure><button type="button" class="gallery-choice" data-photo="imagenes/estudiantes_3.jpg" data-alt="Estudiantes interactuando con sus tabletas en una actividad escolar" data-caption="🌟 Experiencias de aprendizaje" aria-label="Mostrar fotografía: 🌟 Experiencias de aprendizaje"><img src="imagenes/estudiantes_3.jpg" alt="Estudiantes interactuando con sus tabletas en una actividad escolar" loading="lazy"><figcaption>🌟 Experiencias de aprendizaje</figcaption></button></figure>
+<figure><button type="button" class="gallery-choice" data-photo="imagenes/experiencia_aula_innovacion.jpg" data-alt="Estudiantes utilizando tabletas y computadoras en el aula de innovación pedagógica" data-caption="💻 Aula de innovación pedagógica en acción" aria-label="Mostrar fotografía: 💻 Aula de innovación pedagógica en acción"><img src="imagenes/experiencia_aula_innovacion.jpg" alt="Estudiantes utilizando tabletas y computadoras en el aula de innovación pedagógica" loading="lazy"><figcaption>💻 Aula de innovación pedagógica en acción</figcaption></button></figure>
+</div>
+<p class="note">Fotografías compartidas por la institución para mostrar experiencias educativas. No se publican nombres ni resultados individuales de los estudiantes.</p>
+</section>
+</main>
+<footer><strong class="accent">MUNDO EDUCATIVO DIGITAL – CHIPIPATA</strong><br>I.E. N.º 34120 «Almirante Miguel Grau» · Educación Primaria<br>Proyecto de innovación pedagógica · Prof. Jesús Ángel Muggi Cristóbal</footer>
+<script>
+const screen=document.getElementById('select-screen'),catalog=document.getElementById('catalog'),title=document.getElementById('grade-title'),count=document.getElementById('game-count'),empty=document.getElementById('empty');
+let grade=null,area='todos';
+function update(){
+let visible=0,ready=0;
+document.querySelectorAll('.card').forEach(card=>{
+const show=card.dataset.grades.split(',').includes(grade)&&(area==='todos'||card.dataset.area===area);
+card.classList.toggle('hidden',!show);
+if(show){visible++;if(card.dataset.ready==='true')ready++;}
+});
+count.textContent=ready+' juego'+(ready===1?'':'s')+' disponible'+(ready===1?'':'s');
+empty.classList.toggle('hidden',ready>0);
+empty.textContent=visible===0?'✨ Aún no hay juegos de esta área para tu grado.':'🌟 Los juegos para este grado están en preparación. ¡Muy pronto habrá nuevas aventuras!';
+}
+document.querySelectorAll('[data-grade]').forEach(btn=>btn.addEventListener('click',()=>{
+grade=btn.dataset.grade;area='todos';title.textContent='🎯 Juegos para '+grade+'.º grado';
+screen.classList.add('hidden');catalog.classList.remove('hidden');
+document.querySelectorAll('[data-filter]').forEach(b=>{const active=b.dataset.filter==='todos';b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
+update();window.scrollTo({top:0,behavior:'smooth'});
+}));
+document.getElementById('back').addEventListener('click',()=>{catalog.classList.add('hidden');screen.classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});});
+document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{
+area=btn.dataset.filter;document.querySelectorAll('[data-filter]').forEach(b=>{const active=b===btn;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});update();
+}));
+
+document.querySelectorAll('.gallery-choice,.hero-choice').forEach((button)=>{
+  button.addEventListener('click',()=>{
+    const featured=document.getElementById('featured-photo');
+    const caption=document.getElementById('featured-caption');
+    featured.src=button.dataset.photo;
+    featured.alt=button.dataset.alt;
+    caption.textContent=button.dataset.caption;
+    document.querySelectorAll('.gallery figure').forEach((figure)=>figure.classList.remove('selected'));
+    document.querySelectorAll('.hero-choice').forEach((choice)=>choice.classList.toggle('selected',choice.dataset.photo===button.dataset.photo));
+    if(button.classList.contains('gallery-choice')) button.closest('figure').classList.add('selected');
+  });
+});
+</script></body></html>
